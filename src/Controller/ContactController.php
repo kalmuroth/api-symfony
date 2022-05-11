@@ -20,14 +20,14 @@ class ContactController extends AbstractController
     {
 
         $repository = $doctrine->getRepository(Contact::class);
-        $contact = $repository->find($id);
+        $user = $repository->find($id);
 
-        if (!$contact) {
+        if (!$user) {
             throw $this->createNotFoundException('Aucun contact n\'a été trouvé pour ' .$id);
         }
         
         return $this->render('public/contact.html.twig', [
-            'contact' => $contact
+            'contact' => $user
         ]);
     }
 
@@ -86,12 +86,10 @@ class ContactController extends AbstractController
         $entityManger = $doctrine->getManager();
         $repository = $doctrine->getRepository(Contact::class);
 
-        $contact = $repository->find($id);
-
-        if (!$contact) {
-            throw $this->createNotFoundException('Aucun contact n\'a été trouvé pour ' .$id);
-        }
-        $contact->setTelephone("New number");
+        $user = $repository->find($id);
+        $user->setNom("CHANGE");
+        $user->setPrenom("CHANGE");
+        $user->setTelephone("CHANGE");
         $entityManger->flush();
 
         return $this->redirectToRoute('home');
