@@ -27,16 +27,23 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-
+use App\Entity\Contact;
 
 class HomeController extends AbstractController{
     /**
      * @Route("/home", name="home")
     */
-    public function home(){
-        return $this->render('public/home.html.twig');
+    public function index(ManagerRegistry $doctrine): Response
+    {
+        $age = 18;
+        $contacts = $doctrine->getRepository(Contact::class)->findAllGreaterThanAge($age);
+
+        return $this->render('public/home.html.twig',[
+            'contacts' => $contacts
+        ]);
     }
+
 }

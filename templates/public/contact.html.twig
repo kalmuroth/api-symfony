@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Agenda{% endblock %}
+
+{% block body %}
+
+<div class="jumbotron">
+  <h1 class="display-4">{{ contact.nom }} {{ contact.prenom}}</h1>
+  <hr class="my-4">
+   <p class="lead"> Âge : {{contact.age}} </p>
+  <p class="lead"> Adresse : {{contact.adresse}} {{ contact.ville }} </p>
+  <p class="lead"> Téléphone : {{contact.telephone}}</p>
+</div>
+{% endblock %}
