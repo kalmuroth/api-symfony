@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Routing\Annotation\Route;
-
+use App\Repository\AnnonceRepository;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -30,19 +30,18 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use App\Entity\Contact;
+use App\Entity\Annonce;
 
 class HomeController extends AbstractController{
     /**
-     * @Route("/home", name="home")
+     * @Route("/", name="home")
     */
-    public function index(ManagerRegistry $doctrine): Response
+    public function index(AnnonceRepository $repo, ManagerRegistry $doctrine): Response
     {
-        $age = 18;
-        $contacts = $doctrine->getRepository(Contact::class)->findAllGreaterThanAge($age);
-
+        $annonces = $repo->findAll();
+        
         return $this->render('public/home.html.twig',[
-            'contacts' => $contacts
+            'annonces' => $annonces
         ]);
     }
 

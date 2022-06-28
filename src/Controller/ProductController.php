@@ -4,55 +4,66 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use App\Entity\User;
 use App\Entity\Product;
 use App\Form\Type\RegistrationType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Doctrine\Persistence\ManagerRegistry;
+
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\Put;
 
 class ProductController extends AbstractController
 {
     /**
-     * @Route("/login", name="login")
+     * @Post(
+     *      path = "/products",
+     *      name = "app_product_add",
+     *      requirements = {"id"="\d+"}
+     * )
+     * @View
+     * @ParamConverter("product", converter="fos_rest.request_body")     
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
-    {
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+    public function addAction(Product $product, ManagerRegistry $doctrine){
+        $em = $doctrine->getManager();
+        $em->persist($product);
+        $em->flush();
+        return $product;
     }
 
     /**
-     * @Route("/register", name="registration")
+     * @Get(
+     *      path = "/products/{id}",
+     *      name = "app_product_get",
+     *      requirements = {"id"="\d+"}
+     * )
+     * @View   
      */
-    public function registration(Request $request,  UserPasswordEncoderInterface $passwordEncoder){
+    public function getAction(Product $product, ManagerRegistry $doctrine){
+        $em = $doctrine->getManager();
+        $em->persist($product);
+        $em->flush();
+        return $product;
+    }
 
-        // 1) build the form
-        $user = new User();
-        $form = $this->createForm(RegistrationType::class, $user);
-
-        // 2) handle the submit (will only happen on POST)
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            // 3) Encode the password (you could also do this via Doctrine listener)
-            $password = $passwordEncoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
-
-            // 4) save the User!
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-            
-            return $this->redirectToRoute('home');              
-
-        }
-
-        return $this->render('security/registration.html.twig', [
-            'formRegistration' => $form->createView()
-        ]);
+    /**
+     * @Put(
+     *      path = "/products/{id}",
+     *      name = "app_product_put",
+     *      requirements = {"id"="\d+"}
+     * )
+     * @View
+     * @ParamConverter("product", converter="fos_rest.request_body")     
+     */
+    public function putAction(Product $product, ManagerRegistry $doctrine){
+        $em = $doctrine->getManager();
+        $em->persist($product);
+        $em->flush();
+        return $product;
     }
 }

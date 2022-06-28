@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Projet Symfony{% endblock %}</title>
+        <title>{% block title %}Bon Coin{% endblock %}</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/lux/bootstrap.min.css">
         {% block stylesheets %}
         {% endblock %}
@@ -13,25 +13,40 @@
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid" style="margin-left:40px; margin-right:40px">
-                    <a class="navbar-brand" href="/home">
-                        <img src="/images/logo.svg" alt="My Agenda" width=50 height=68>
+                    <a class="navbar-brand" href="/">
+                        <img src="/images/logo.svg" alt="Le Bon Coin" width=50 height=68>
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarColor03">
                         <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a href ="/home" class="nav-link">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href ="/contact/add" class="nav-link">Ajouter Contact</a>
-                            </li>
+                            {% if is_granted('ROLE_USER_TO_CONFIRM') %}
+                                <li class="nav-item">
+                                    <a href ="/annonce/add" class="nav-link">Déposer une annonce</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a href ="/login" class="nav-link">Déposer une annonce</a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </div>
-                    <div>
-                        <a href ="/register" class="btn btn-warning" >Enregistrer</a>
-                    </div>
+                    {% if is_granted('ROLE_USER_TO_CONFIRM') %}
+                        <div>
+                            <a href ="/logout" class="btn btn-warning" >Déconnexion</a>
+                        </div>
+                        <div>
+                            <a class="btn btn-info">{{ app.user.username}} est connecté </a>
+                        </div>
+                    {% else %}
+                        <div>
+                            <a href ="/register" class="btn btn-warning" >S'inscrire</a>
+                        </div>
+                        <div>
+                            <a href ="/login" class="btn btn-warning" >Se connecter</a>
+                        </div>
+                    {% endif %}
                 </div>
             </nav>
     </body>
@@ -39,4 +54,13 @@
             {% block body %}
             {% endblock %}
     </div>
+    
+    <footer>
+        <div class="container">
+                <p>
+                    Copyright © MY WEBSITE 2022
+                </p>
+        </div>
+    </footer>
+
 </html>

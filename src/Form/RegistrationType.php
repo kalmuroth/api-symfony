@@ -21,11 +21,10 @@ class RegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $levels = ['JAT1', 'JAT2', 'JAT3', 'FJAT2', 'FJAT3'];
-
         $builder
             ->add('name', TextType::class)
             ->add('surname', TextType::class)
+            ->add('email', TextType::class)
             ->add('password', PasswordType::class)
             ->add('confirm_password', PasswordType::class)
         ;

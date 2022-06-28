@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Entity;
-
+use FOS\RestBundle\Controller\Annotations as Rest;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -21,22 +19,39 @@ class Product
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $nom;
+
+    /**
+	 * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
+	 */
+	private $category;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): self
+    public function setNom(string $nom): self
     {
-        $this->name = $name;
+        $this->nom = $nom;
 
         return $this;
     }
+
+    public function getCategory(): ?Category
+	{
+		return $this->category;
+	}
+
+	public function setCategory(?Category $category): self
+   	{
+   		$this->category = $category;
+   
+   		return $this;
+   	}
 }
